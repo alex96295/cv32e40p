@@ -25,6 +25,8 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+`define UNLOCK_NIBBLE
+
 import riscv_defines::*;
 
 module riscv_mult
@@ -258,6 +260,7 @@ module riscv_mult
         logic      [16:0] dot_short_op_a_1_neg; //to compute -rA[31:16]*rB[31:16] -> (!rA[31:16] + 1)*rB[31:16] = !rA[31:16]*rB[31:16] + rB[31:16]
         logic      [31:0] dot_short_op_b_ext;
 
+        //CHAR: 1B operands (8 bit)
         assign dot_char_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 0]};
         assign dot_char_op_a[1] = {dot_signed_i[1] & dot_op_a_i[15], dot_op_a_i[15: 8]};
         assign dot_char_op_a[2] = {dot_signed_i[1] & dot_op_a_i[23], dot_op_a_i[23:16]};
@@ -277,7 +280,7 @@ module riscv_mult
                                   $signed(dot_char_mul[2]) + $signed(dot_char_mul[3]) +
                                   $signed(dot_op_c_i);
 
-
+        //SHORT: 2B operands (16 bit)
         assign dot_short_op_a[0]    = {dot_signed_i[1] & dot_op_a_i[15], dot_op_a_i[15: 0]};
         assign dot_short_op_a[1]    = {dot_signed_i[1] & dot_op_a_i[31], dot_op_a_i[31:16]};
         assign dot_short_op_a_1_neg = dot_short_op_a[1] ^ {17{(is_clpx_i & ~clpx_img_i)}}; //negates whether clpx_img_i is 0 or 1, only REAL PART needs to be negated
@@ -294,9 +297,57 @@ module riscv_mult
         assign dot_short_result  = $signed(dot_short_mul[0][31:0]) + $signed(dot_short_mul[1][31:0]) + $signed(accumulator);
         assign clpx_shift_result = $signed(dot_short_result[31:15])>>>clpx_shift_i;
 
+`ifdef UNLOCK_NIBBLE
+
+       logic [7:0][ 3:0] dot_nibble_op_a;
+       logic [7:0][ 3:0] dot_nibble_op_b;
+       logic [7:0][7:0] dot_nibble_mul;
+       logic [31:0] dot_nibble_result;
+
+       //NIBBLE: (1/2)B operands (4 bit)
+       assign dot_nibble_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 3], dot_op_a_i[ 3: 0]};
+       assign dot_nibble_op_a[1] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 4]};
+       assign dot_nibble_op_a[2] = {dot_signed_i[1] & dot_op_a_i[11], dot_op_a_i[11: 8]};
+       assign dot_nibble_op_a[3] = {dot_signed_i[1] & dot_op_a_i[15], dot_op_a_i[15:12]};
+       assign dot_nibble_op_a[4] = {dot_signed_i[1] & dot_op_a_i[19], dot_op_a_i[19:16]};
+       assign dot_nibble_op_a[5] = {dot_signed_i[1] & dot_op_a_i[23], dot_op_a_i[23:20]};
+       assign dot_nibble_op_a[6] = {dot_signed_i[1] & dot_op_a_i[27], dot_op_a_i[27:24]};
+       assign dot_nibble_op_a[7] = {dot_signed_i[1] & dot_op_a_i[31], dot_op_a_i[31:28]};
+
+       
+       assign dot_nibble_op_b[0] = {dot_signed_i[0] & dot_op_b_i[ 3], dot_op_b_i[ 3: 0]};
+       assign dot_nibble_op_b[1] = {dot_signed_i[0] & dot_op_b_i[ 7], dot_op_b_i[ 7: 4]};
+       assign dot_nibble_op_b[2] = {dot_signed_i[0] & dot_op_b_i[11], dot_op_b_i[11: 8]};
+       assign dot_nibble_op_b[3] = {dot_signed_i[0] & dot_op_b_i[15], dot_op_b_i[15:12]};
+       assign dot_nibble_op_b[4] = {dot_signed_i[0] & dot_op_b_i[19], dot_op_b_i[19:16]};
+       assign dot_nibble_op_b[5] = {dot_signed_i[0] & dot_op_b_i[23], dot_op_b_i[23:20]};
+       assign dot_nibble_op_b[6] = {dot_signed_i[0] & dot_op_b_i[27], dot_op_b_i[27:24]};
+       assign dot_nibble_op_b[7] = {dot_signed_i[0] & dot_op_b_i[31], dot_op_b_i[31:28]};
+
+       assign dot_nibble_mul[0]  = $signed(dot_nibble_op_a[0]) * $signed(dot_nibble_op_b[0]);
+       assign dot_nibble_mul[1]  = $signed(dot_nibble_op_a[1]) * $signed(dot_nibble_op_b[1]);
+       assign dot_nibble_mul[2]  = $signed(dot_nibble_op_a[2]) * $signed(dot_nibble_op_b[2]);
+       assign dot_nibble_mul[3]  = $signed(dot_nibble_op_a[3]) * $signed(dot_nibble_op_b[3]);
+       assign dot_nibble_mul[4]  = $signed(dot_nibble_op_a[4]) * $signed(dot_nibble_op_b[4]);
+       assign dot_nibble_mul[5]  = $signed(dot_nibble_op_a[5]) * $signed(dot_nibble_op_b[5]);
+       assign dot_nibble_mul[6]  = $signed(dot_nibble_op_a[6]) * $signed(dot_nibble_op_b[6]);
+       assign dot_nibble_mul[7]  = $signed(dot_nibble_op_a[7]) * $signed(dot_nibble_op_b[7]);
+
+       assign dot_nibble_result  = $signed(dot_nibble_mul[0]) + $signed(dot_nibble_mul[1]) +
+                                 $signed(dot_nibble_mul[2]) + $signed(dot_nibble_mul[3]) +
+                                 $signed(dot_nibble_mul[4]) + $signed(dot_nibble_mul[5]) +
+                                 $signed(dot_nibble_mul[6]) + $signed(dot_nibble_mul[7]) +
+                                 $signed(dot_op_c_i);
+       
+`endif
+
      end else begin
         assign dot_char_result  = '0;
         assign dot_short_result = '0;
+       
+`ifdef UNLOCK_NIBBLE
+        assign dot_nibble_result = '0;
+`endif
      end
   endgenerate
 
@@ -331,8 +382,10 @@ module riscv_mult
         end else begin
             result_o = dot_short_result[31:0];
         end
-      end
-
+      end // case: MUL_DOT16
+      
+      MUL_DOT4: result_o = dot_nibble_result[31:0];
+      
       default: ; // default case to suppress unique warning
     endcase
   end
