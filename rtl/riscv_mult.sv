@@ -25,7 +25,7 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-`define UNLOCK_NIBBLE
+
 
 import riscv_defines::*;
 
@@ -246,6 +246,11 @@ module riscv_mult
   logic [32:0] dot_short_result;
   logic [31:0] accumulator;
   logic [15:0] clpx_shift_result;
+  
+  logic [7:0][ 3:0] dot_nibble_op_a;
+  logic [7:0][ 3:0] dot_nibble_op_b;
+  logic [7:0][7:0] dot_nibble_mul;
+  logic [31:0] dot_nibble_result;
 
    generate
      if (SHARED_DSP_MULT == 0) begin
@@ -297,12 +302,8 @@ module riscv_mult
         assign dot_short_result  = $signed(dot_short_mul[0][31:0]) + $signed(dot_short_mul[1][31:0]) + $signed(accumulator);
         assign clpx_shift_result = $signed(dot_short_result[31:15])>>>clpx_shift_i;
 
-`ifdef UNLOCK_NIBBLE
 
-       logic [7:0][ 3:0] dot_nibble_op_a;
-       logic [7:0][ 3:0] dot_nibble_op_b;
-       logic [7:0][7:0] dot_nibble_mul;
-       logic [31:0] dot_nibble_result;
+      
 
        //NIBBLE: (1/2)B operands (4 bit)
        assign dot_nibble_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 3], dot_op_a_i[ 3: 0]};
@@ -339,15 +340,12 @@ module riscv_mult
                                  $signed(dot_nibble_mul[6]) + $signed(dot_nibble_mul[7]) +
                                  $signed(dot_op_c_i);
        
-`endif
 
      end else begin
         assign dot_char_result  = '0;
         assign dot_short_result = '0;
-       
-`ifdef UNLOCK_NIBBLE
         assign dot_nibble_result = '0;
-`endif
+
      end
   endgenerate
 

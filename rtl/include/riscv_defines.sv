@@ -23,7 +23,7 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-`def UNLOCK_NIBBLE
+
 
 package riscv_defines;
 
@@ -182,9 +182,8 @@ parameter MUL_IR    = 3'b011;
 parameter MUL_DOT8  = 3'b100;
 parameter MUL_DOT16 = 3'b101;
 parameter MUL_H     = 3'b110;
-`ifdef UNLOCK_NIBBLE
 parameter MUL_DOT4  = 3'b111;
-`endif
+
   
 
 // vector modes
