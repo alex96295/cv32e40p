@@ -2053,7 +2053,7 @@ module riscv_decoder
         // vector size for nibble
         if (instr_rdata_i[14:12] == 3'b010) begin 
           //alu_vec_mode_o = VEC_MODE4;
-          mult_operator_o = MULT_DOT4;
+          mult_operator_o = MUL_DOT4;
         end else if (instr_rdata_i[14:12] == 3'b000 || instr_rdata_i[14:12] == 3'b100 || instr_rdata_i[14:12] == 3'b110) begin
           alu_vec_mode_o  = VEC_MODE16;
           mult_operator_o = MUL_DOT16;
