@@ -26,6 +26,7 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 module riscv_alu

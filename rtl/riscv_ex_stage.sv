@@ -32,9 +32,12 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-`include "apu_macros.sv"
+`include "include/apu_macros.sv"
 
-import apu_core_package::*;
+//`include "include/apu_core_package.sv"
+//import apu_core_package::*;
+
+`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 module riscv_ex_stage
@@ -55,6 +58,7 @@ module riscv_ex_stage
 
   // ALU signals from ID stage
   input  logic [ALU_OP_WIDTH-1:0] alu_operator_i,
+
   input  logic [31:0] alu_operand_a_i,
   input  logic [31:0] alu_operand_b_i,
   input  logic [31:0] alu_operand_c_i,
