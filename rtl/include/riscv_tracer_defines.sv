@@ -11,7 +11,7 @@
 
 package riscv_tracer_defines;
 
-`include "include/riscv_defines.sv"
+//`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 // settings
