@@ -25,9 +25,9 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-`include "include/apu_macros.sv"
+`include "apu_macros.sv"
 
-`include "include/riscv_defines.sv"
+//`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 module riscv_decoder

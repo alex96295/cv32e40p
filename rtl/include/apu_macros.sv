@@ -12,7 +12,7 @@
 // that is implemented in the core into an APU with one line, and be auto-
 // deactivated when the corresponding APU is not implemented
 
-`include "include/apu_core_package.sv"
+//`include "include/apu_core_package.sv"
 import apu_core_package::*;
 
 // Source/Destination register instruction index

@@ -29,12 +29,12 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-`include "include/apu_core_package.sv"
+//`include "include/apu_core_package.sv"
 import apu_core_package::*;
 
-`include "include/riscv_config.sv"
+//`include "include/riscv_config.sv"
 
-`include "include/riscv_defines.sv"
+//`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 module riscv_core
