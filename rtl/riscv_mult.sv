@@ -247,9 +247,9 @@ module riscv_mult
   logic [31:0] accumulator;
   logic [15:0] clpx_shift_result;
   
-  logic [7:0][ 3:0] dot_nibble_op_a;
-  logic [7:0][ 3:0] dot_nibble_op_b;
-  logic [7:0][7:0] dot_nibble_mul;
+  logic [7:0][4:0] dot_nibble_op_a;
+  logic [7:0][4:0] dot_nibble_op_b;
+  logic [7:0][9:0] dot_nibble_mul;
   logic [31:0] dot_nibble_result;
 
    generate
