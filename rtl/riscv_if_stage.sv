@@ -25,7 +25,7 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-
+`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 module riscv_if_stage

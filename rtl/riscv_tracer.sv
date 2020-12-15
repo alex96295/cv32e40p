@@ -24,7 +24,10 @@
 
 `ifndef VERILATOR
 
+`include "include/riscv_defines.sv"
 import riscv_defines::*;
+
+`include "include/riscv_tracer_defines.sv"
 import riscv_tracer_defines::*;
 
 // Source/Destination register instruction index

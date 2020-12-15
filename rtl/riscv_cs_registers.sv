@@ -26,6 +26,7 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+`include "include/riscv_defines.sv"
 import riscv_defines::*;
 
 `ifndef PULP_FPGA_EMUL

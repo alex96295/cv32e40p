@@ -27,7 +27,10 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+`include "include/riscv_defines.sv"
 import riscv_defines::*;
+
+`include "include/apu_core_package.sv"
 import apu_core_package::*;
 
 
