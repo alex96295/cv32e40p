@@ -27,9 +27,6 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-`include "include/riscv_defines.sv"
-`include "include/apu_core_package.sv"
-
 import riscv_defines::*;
 import apu_core_package::*;
 
@@ -1520,7 +1517,8 @@ module riscv_id_stage
             alu_clpx_shift_ex_o       <= instr[14:13];
             alu_is_subrot_ex_o        <= is_subrot;
           end
-        end
+        end // if (alu_en | branch_taken_ex)
+        
 
         mult_en_ex_o                <= mult_en;
         if (mult_int_en) begin
@@ -1532,11 +1530,14 @@ module riscv_id_stage
           mult_operand_c_ex_o       <= alu_operand_c;
           mult_imm_ex_o             <= mult_imm_id;
         end
+
         if (mult_dot_en) begin
           mult_operator_ex_o        <= mult_operator;
           mult_dot_signed_ex_o      <= mult_dot_signed;
           mult_dot_op_a_ex_o        <= alu_operand_a;
           mult_dot_op_b_ex_o        <= alu_operand_b;
+
+          
           mult_dot_op_c_ex_o        <= alu_operand_c;
           mult_is_clpx_ex_o         <= is_clpx;
           mult_clpx_shift_ex_o      <= instr[14:13];
