@@ -32,7 +32,7 @@
 //`include "include/apu_core_package.sv"
 import apu_core_package::*;
 
-//`include "include/riscv_config.sv"
+`include "riscv_config.sv"
 
 //`include "include/riscv_defines.sv"
 import riscv_defines::*;
