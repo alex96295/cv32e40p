@@ -2055,12 +2055,15 @@ module riscv_decoder
         if (instr_rdata_i[14:12] == 3'b010) begin 
           //alu_vec_mode_o = VEC_MODE4;
           mult_operator_o = MUL_DOT4;
+          $display("Using MUL_DOT4"); 
         end else if (instr_rdata_i[14:12] == 3'b000 || instr_rdata_i[14:12] == 3'b100 || instr_rdata_i[14:12] == 3'b110) begin
           alu_vec_mode_o  = VEC_MODE16;
           mult_operator_o = MUL_DOT16;
+           $display("Using MUL_DOT16");
         end else if (instr_rdata_i[14:12] == 3'b001 || instr_rdata_i[14:12] == 3'b101 || instr_rdata_i[14:12] == 3'b111) begin
           alu_vec_mode_o = VEC_MODE8;
-          mult_operator_o = MUL_DOT8;       
+          mult_operator_o = MUL_DOT8;
+          $display("Using MUL_DOT8");       
         end
 
         // distinguish normal vector, sc and sci modes
@@ -2077,6 +2080,7 @@ module riscv_decoder
         end else begin
           // normal register use
           regb_used_o = 1'b1;
+          $display("i am using vector-vector");
         end
 
         
