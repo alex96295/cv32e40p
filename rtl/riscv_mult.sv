@@ -244,28 +244,32 @@ module riscv_mult
 
   logic [31:0] dot_char_result;
   logic [32:0] dot_short_result;
+  logic [31:0] dot_nibble_result;
+  
   logic [31:0] accumulator;
   logic [15:0] clpx_shift_result;
   
-  logic [7:0][4:0] dot_nibble_op_a;
-  logic [7:0][4:0] dot_nibble_op_b;
-  logic [7:0][9:0] dot_nibble_mul;
-  logic [31:0] dot_nibble_result;
-
    generate
      if (SHARED_DSP_MULT == 0) begin
 
+        //8 bit
         logic [3:0][ 8:0] dot_char_op_a;
         logic [3:0][ 8:0] dot_char_op_b;
         logic [3:0][17:0] dot_char_mul;
 
+        //16 bit
         logic [1:0][16:0] dot_short_op_a;
         logic [1:0][16:0] dot_short_op_b;
         logic [1:0][33:0] dot_short_mul;
         logic      [16:0] dot_short_op_a_1_neg; //to compute -rA[31:16]*rB[31:16] -> (!rA[31:16] + 1)*rB[31:16] = !rA[31:16]*rB[31:16] + rB[31:16]
         logic      [31:0] dot_short_op_b_ext;
 
-        //CHAR: 1B operands (8 bit)
+        //4 bit
+        logic [7:0][4:0] dot_nibble_op_a;
+        logic [7:0][4:0] dot_nibble_op_b;
+        logic [7:0][9:0] dot_nibble_mul;
+
+        //8 bt
         assign dot_char_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 0]};
         assign dot_char_op_a[1] = {dot_signed_i[1] & dot_op_a_i[15], dot_op_a_i[15: 8]};
         assign dot_char_op_a[2] = {dot_signed_i[1] & dot_op_a_i[23], dot_op_a_i[23:16]};
@@ -285,7 +289,7 @@ module riscv_mult
                                   $signed(dot_char_mul[2]) + $signed(dot_char_mul[3]) +
                                   $signed(dot_op_c_i);
 
-        //SHORT: 2B operands (16 bit)
+        //16 bit
         assign dot_short_op_a[0]    = {dot_signed_i[1] & dot_op_a_i[15], dot_op_a_i[15: 0]};
         assign dot_short_op_a[1]    = {dot_signed_i[1] & dot_op_a_i[31], dot_op_a_i[31:16]};
         assign dot_short_op_a_1_neg = dot_short_op_a[1] ^ {17{(is_clpx_i & ~clpx_img_i)}}; //negates whether clpx_img_i is 0 or 1, only REAL PART needs to be negated
@@ -304,8 +308,7 @@ module riscv_mult
 
 
       
-
-       //NIBBLE: (1/2)B operands (4 bit)
+       //4 bit
        assign dot_nibble_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 3], dot_op_a_i[ 3: 0]};
        assign dot_nibble_op_a[1] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 4]};
        assign dot_nibble_op_a[2] = {dot_signed_i[1] & dot_op_a_i[11], dot_op_a_i[11: 8]};
