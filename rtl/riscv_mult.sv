@@ -265,10 +265,15 @@ module riscv_mult
         logic      [31:0] dot_short_op_b_ext;
 
         //4 bit
-        logic [7:0][4:0] dot_nibble_op_a;
+        /*logic [7:0][4:0] dot_nibble_op_a;
         logic [7:0][4:0] dot_nibble_op_b;
-        logic [7:0][9:0] dot_nibble_mul;
-        
+        logic [7:0][9:0] dot_nibble_mul;*/
+
+        logic [7:0][7:0] dot_nibble_op_a;
+        logic [7:0][7:0] dot_nibble_op_b;
+        logic [7:0][15:0] dot_nibble_mul;
+        logic [7:0][7:0]   dot_nibble_mul_out;
+               
 
         //8 bt
         assign dot_char_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 0]};
@@ -310,7 +315,7 @@ module riscv_mult
 
       
        //4 bit
-       assign dot_nibble_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 3], dot_op_a_i[ 3: 0]};
+       /*assign dot_nibble_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 3], dot_op_a_i[ 3: 0]};
        assign dot_nibble_op_a[1] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 4]};
        assign dot_nibble_op_a[2] = {dot_signed_i[1] & dot_op_a_i[11], dot_op_a_i[11: 8]};
        assign dot_nibble_op_a[3] = {dot_signed_i[1] & dot_op_a_i[15], dot_op_a_i[15:12]};
@@ -342,6 +347,49 @@ module riscv_mult
                                  $signed(dot_nibble_mul[2]) + $signed(dot_nibble_mul[3]) +
                                  $signed(dot_nibble_mul[4]) + $signed(dot_nibble_mul[5]) +
                                  $signed(dot_nibble_mul[6]) + $signed(dot_nibble_mul[7]) +
+                                 $signed(dot_op_c_i);*/
+
+       assign dot_nibble_op_a[0] = {{4{dot_signed_i[1] & dot_op_a_i[ 3]}}, {dot_op_a_i[ 3: 0]}};
+       assign dot_nibble_op_a[1] = {{4{dot_signed_i[1] & dot_op_a_i[ 7]}}, {dot_op_a_i[ 7: 4]}};
+       assign dot_nibble_op_a[2] = {{4{dot_signed_i[1] & dot_op_a_i[11]}}, {dot_op_a_i[11: 8]}};
+       assign dot_nibble_op_a[3] = {{4{dot_signed_i[1] & dot_op_a_i[15]}}, {dot_op_a_i[15:12]}};
+       assign dot_nibble_op_a[4] = {{4{dot_signed_i[1] & dot_op_a_i[19]}}, {dot_op_a_i[19:16]}};
+       assign dot_nibble_op_a[5] = {{4{dot_signed_i[1] & dot_op_a_i[23]}}, {dot_op_a_i[23:20]}};
+       assign dot_nibble_op_a[6] = {{4{dot_signed_i[1] & dot_op_a_i[27]}}, {dot_op_a_i[27:24]}};
+       assign dot_nibble_op_a[7] = {{4{dot_signed_i[1] & dot_op_a_i[31]}}, {dot_op_a_i[31:28]}};
+
+       
+       assign dot_nibble_op_b[0] = {{4{dot_signed_i[0] & dot_op_b_i[ 3]}}, {dot_op_b_i[ 3: 0]}};
+       assign dot_nibble_op_b[1] = {{4{dot_signed_i[0] & dot_op_b_i[ 7]}}, {dot_op_b_i[ 7: 4]}};
+       assign dot_nibble_op_b[2] = {{4{dot_signed_i[0] & dot_op_b_i[11]}}, {dot_op_b_i[11: 8]}};
+       assign dot_nibble_op_b[3] = {{4{dot_signed_i[0] & dot_op_b_i[15]}}, {dot_op_b_i[15:12]}};
+       assign dot_nibble_op_b[4] = {{4{dot_signed_i[0] & dot_op_b_i[19]}}, {dot_op_b_i[19:16]}};
+       assign dot_nibble_op_b[5] = {{4{dot_signed_i[0] & dot_op_b_i[23]}}, {dot_op_b_i[23:20]}};
+       assign dot_nibble_op_b[6] = {{4{dot_signed_i[0] & dot_op_b_i[27]}}, {dot_op_b_i[27:24]}};
+       assign dot_nibble_op_b[7] = {{4{dot_signed_i[0] & dot_op_b_i[31]}}, {dot_op_b_i[31:28]}};
+
+       assign dot_nibble_mul[0]  = $signed(dot_nibble_op_a[0]) * $signed(dot_nibble_op_b[0]);
+       assign dot_nibble_mul[1]  = $signed(dot_nibble_op_a[1]) * $signed(dot_nibble_op_b[1]);
+       assign dot_nibble_mul[2]  = $signed(dot_nibble_op_a[2]) * $signed(dot_nibble_op_b[2]);
+       assign dot_nibble_mul[3]  = $signed(dot_nibble_op_a[3]) * $signed(dot_nibble_op_b[3]);
+       assign dot_nibble_mul[4]  = $signed(dot_nibble_op_a[4]) * $signed(dot_nibble_op_b[4]);
+       assign dot_nibble_mul[5]  = $signed(dot_nibble_op_a[5]) * $signed(dot_nibble_op_b[5]);
+       assign dot_nibble_mul[6]  = $signed(dot_nibble_op_a[6]) * $signed(dot_nibble_op_b[6]);
+       assign dot_nibble_mul[7]  = $signed(dot_nibble_op_a[7]) * $signed(dot_nibble_op_b[7]);
+
+       assign dot_nibble_mul_out[0] = $signed(dot_nibble_mul[0][7:0]);
+       assign dot_nibble_mul_out[1] = $signed(dot_nibble_mul[1][7:0]);
+       assign dot_nibble_mul_out[2] = $signed(dot_nibble_mul[2][7:0]);
+       assign dot_nibble_mul_out[3] = $signed(dot_nibble_mul[3][7:0]);
+       assign dot_nibble_mul_out[4] = $signed(dot_nibble_mul[4][7:0]);
+       assign dot_nibble_mul_out[5] = $signed(dot_nibble_mul[5][7:0]);
+       assign dot_nibble_mul_out[6] = $signed(dot_nibble_mul[6][7:0]);
+       assign dot_nibble_mul_out[7] = $signed(dot_nibble_mul[7][7:0]);
+
+       assign dot_nibble_result  = $signed(dot_nibble_mul_out[0]) + $signed(dot_nibble_mul_out[1]) +
+                                 $signed(dot_nibble_mul_out[2]) + $signed(dot_nibble_mul_out[3]) +
+                                 $signed(dot_nibble_mul_out[4]) + $signed(dot_nibble_mul_out[5]) +
+                                 $signed(dot_nibble_mul_out[6]) + $signed(dot_nibble_mul_out[7]) +
                                  $signed(dot_op_c_i);
        
 
