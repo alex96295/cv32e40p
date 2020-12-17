@@ -268,7 +268,7 @@ module riscv_mult
         logic [7:0][4:0] dot_nibble_op_a;
         logic [7:0][4:0] dot_nibble_op_b;
         logic [7:0][9:0] dot_nibble_mul;
-        ;
+        
 
         //8 bt
         assign dot_char_op_a[0] = {dot_signed_i[1] & dot_op_a_i[ 7], dot_op_a_i[ 7: 0]};
